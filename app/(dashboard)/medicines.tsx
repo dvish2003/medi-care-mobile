@@ -120,7 +120,6 @@ const MedicinesScreen = () => {
       onPress={() => setSelectedCategory(item.id)}
     >
     <Ionicons 
-      name={item.icon} 
       size={24} 
       color={selectedCategory === item.id ? "#fff" : "#7226ff"} 
     />
@@ -243,7 +242,7 @@ const MedicinesScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#f8f9fa',
+    backgroundColor: '#121212', // Dark background
   },
   header: {
     paddingTop: 60,
@@ -251,6 +250,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderBottomLeftRadius: 20,
     borderBottomRightRadius: 20,
+    backgroundColor: '#1e1e1e', // Dark header
   },
   headerContent: {
     marginBottom: 15,
@@ -263,21 +263,24 @@ const styles = StyleSheet.create({
   searchContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'white',
+    backgroundColor: '#2d2d2d', // Dark search background
     borderRadius: 10,
     paddingHorizontal: 12,
     height: 45,
   },
   searchIcon: {
     marginRight: 8,
+    color: 'white', // White icon
   },
   searchInput: {
     flex: 1,
     fontSize: 16,
+    color: 'white', 
   },
   content: {
     flex: 1,
     padding: 16,
+    backgroundColor: '#121212', 
   },
   categoriesSection: {
     marginBottom: 20,
@@ -285,7 +288,7 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white', 
     marginBottom: 15,
   },
   categoriesList: {
@@ -295,7 +298,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 12,
     marginRight: 12,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#2d2d2d', // Dark background
     borderRadius: 12,
     minWidth: 100,
   },
@@ -306,11 +309,11 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 12,
     fontWeight: '500',
-    color: '#7226ff',
+    color: 'white', // White text
     textAlign: 'center',
   },
   categoryTextSelected: {
-    color: '#fff',
+    color: 'white',
   },
   medicinesSection: {
     flex: 1,
@@ -318,14 +321,14 @@ const styles = StyleSheet.create({
   resultsCount: {
     fontSize: 16,
     fontWeight: 'normal',
-    color: '#666',
+    color: '#ccc', // Light gray
   },
   medicinesList: {
     paddingBottom: 20,
   },
   medicineCard: {
     flexDirection: 'row',
-    backgroundColor: 'white',
+    backgroundColor: '#1e1e1e', // Dark card background
     borderRadius: 12,
     padding: 12,
     marginBottom: 12,
@@ -334,7 +337,7 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
-    shadowOpacity: 0.1,
+    shadowOpacity: 0.3,
     shadowRadius: 3,
     elevation: 3,
   },
@@ -351,12 +354,12 @@ const styles = StyleSheet.create({
   medicineName: {
     fontSize: 16,
     fontWeight: 'bold',
-    color: '#333',
+    color: 'white', // White text
     marginBottom: 4,
   },
   medicineDescription: {
     fontSize: 14,
-    color: '#666',
+    color: '#ccc', // Light gray
     marginBottom: 6,
   },
   medicinePrice: {
@@ -372,6 +375,7 @@ const styles = StyleSheet.create({
   stockText: {
     fontSize: 14,
     marginLeft: 4,
+    color: '#ccc', // Light gray
   },
   addButton: {
     backgroundColor: '#7226ff',
@@ -383,7 +387,7 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   addButtonDisabled: {
-    backgroundColor: '#ccc',
+    backgroundColor: '#444', // Dark gray for disabled
   },
   emptyState: {
     alignItems: 'center',
@@ -393,13 +397,13 @@ const styles = StyleSheet.create({
   emptyStateText: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#666',
+    color: '#ccc', // Light gray
     marginTop: 16,
     marginBottom: 8,
   },
   emptyStateSubtext: {
     fontSize: 14,
-    color: '#999',
+    color: '#999', // Medium gray
     textAlign: 'center',
   },
 });

@@ -10,27 +10,24 @@ type TabConfig = {
 
 const tabs: TabConfig[] = [
   { label: "Home", name: "home", icon: "home" },
+    { label: "Reminder", name: "reminder", icon: "alarm" },
   { label: "Medicines", name: "medicines", icon: "medical-services" },
-  { label: "Reminders", name: "reminders", icon: "notifications" },
-  { label: "Packages", name: "packages", icon: "inventory" },
-  { label: "Wellness", name: "wellness", icon: "favorite" },
   { label: "Account", name: "account", icon: "person-outline" },
 ];
-
 
 const DashboardLayout = () => {
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: "#fff", // White for active items
-        tabBarInactiveTintColor: "#888", // Gray for inactive items
+        tabBarActiveTintColor: "#fff", 
+        tabBarInactiveTintColor: "#888", 
         headerShown: false,
         tabBarStyle: {
           height: 60,
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
-          backgroundColor: '#000', 
+          backgroundColor: '#000',
         },
         tabBarLabelStyle: {
           fontSize: 12,
