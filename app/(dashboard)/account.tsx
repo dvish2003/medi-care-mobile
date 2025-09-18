@@ -2,7 +2,8 @@ import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Alert, Styl
 import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import * as ImagePicker from 'expo-image-picker';
+import * as ImagePicker from "expo-image-picker";
+import { logout } from "@/services/authService";
 
 // Define TypeScript interface
 interface UserData {
@@ -16,9 +17,10 @@ interface UserData {
 const Account = () => {
   const router = useRouter();
   const [editing, setEditing] = useState(false);
-  const [profileImage, setProfileImage] = useState("https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=150&h=150&fit=crop&crop=face");
-  
-  // User profile data
+  const [profileImage, setProfileImage] = useState(
+    "https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=150&h=150&fit=crop&crop=face"
+  );
+
   const [userData, setUserData] = useState<UserData>({
     name: "John Doe",
     email: "john.doe@example.com",
@@ -27,7 +29,6 @@ const Account = () => {
     address: "123 Health Street, Medical City",
   });
 
-  // Pick image from gallery
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -41,7 +42,6 @@ const Account = () => {
     }
   };
 
-  // Handle input changes
   const handleInputChange = (field: keyof UserData, value: string): void => {
     setUserData({
       ...userData,
@@ -49,38 +49,40 @@ const Account = () => {
     });
   };
 
-  // Save user data
   const saveUserData = () => {
-    // Validate required fields
     if (!userData.name || !userData.email || !userData.phone) {
       Alert.alert("Error", "Please fill in all required fields (Name, Email, Phone)");
       return;
     }
-
-    // Validate email format
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(userData.email)) {
       Alert.alert("Error", "Please enter a valid email address");
       return;
     }
-
-    // Validate phone number (basic validation)
     if (userData.phone.length < 10) {
       Alert.alert("Error", "Please enter a valid phone number");
       return;
     }
-
-    // Validate age
     const ageAsNumber = parseInt(userData.age);
     if (userData.age && (isNaN(ageAsNumber) || ageAsNumber < 0 || ageAsNumber > 150)) {
       Alert.alert("Error", "Please enter a valid age");
       return;
     }
-
-    // Save data
     Alert.alert("Success", "Profile updated successfully!");
     setEditing(false);
   };
+
+  // Handle Logout
+  const handleLogout = async () => {
+    console.log("🔒 User logged out");
+  try {
+      await logout();
+      Alert.alert("Success", "You have been logged out");
+      router.replace("/login"); 
+    } catch (error) {
+      Alert.alert("Error", "Logout failed. Please try again.");
+    }
+    };
 
   return (
     <View style={styles.container}>
@@ -105,9 +107,9 @@ const Account = () => {
           </View>
 
           {/* Edit Button */}
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.editButton}
-            onPress={() => editing ? saveUserData() : setEditing(true)}
+            onPress={() => (editing ? saveUserData() : setEditing(true))}
           >
             <Text style={styles.editButtonText}>
               {editing ? "Save Changes" : "Edit Profile"}
@@ -207,6 +209,11 @@ const Account = () => {
               </View>
             </View>
           </View>
+
+          {/* Logout Button */}
+          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+            <Text style={styles.logoutButtonText}>Logout</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </View>
@@ -214,128 +221,86 @@ const Account = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, backgroundColor: "#fff" },
   header: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
     paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
     borderBottomWidth: 1,
-    borderBottomColor: '#e0e0e0',
+    borderBottomColor: "#e0e0e0",
   },
-  backButton: {
-    padding: 8,
-    borderRadius: 20,
-    backgroundColor: '#f8f8f8',
-  },
-  headerTitle: {
-    fontSize: 24,
-    fontWeight: '800',
-    color: '#000',
-    letterSpacing: -0.5,
-  },
-  content: {
-    flex: 1,
-    padding: 20,
-  },
-  profileSection: {
-    alignItems: 'center',
-  },
-  profileImageContainer: {
-    position: 'relative',
-    marginBottom: 24,
-  },
+  backButton: { padding: 8, borderRadius: 20, backgroundColor: "#f8f8f8" },
+  headerTitle: { fontSize: 24, fontWeight: "800", color: "#000", letterSpacing: -0.5 },
+  content: { flex: 1, padding: 20 },
+  profileSection: { alignItems: "center" },
+  profileImageContainer: { position: "relative", marginBottom: 24 },
   profileImage: {
     width: 120,
     height: 120,
     borderRadius: 60,
     borderWidth: 3,
-    borderColor: '#f8f8f8',
+    borderColor: "#f8f8f8",
   },
   editImageButton: {
-    position: 'absolute',
+    position: "absolute",
     bottom: 0,
     right: 0,
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     width: 40,
     height: 40,
     borderRadius: 20,
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: "center",
+    alignItems: "center",
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: "#fff",
   },
   editButton: {
-    backgroundColor: '#000',
+    backgroundColor: "#000",
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 25,
     marginBottom: 24,
   },
-  editButtonText: {
-    color: '#fff',
-    fontWeight: '700',
-    fontSize: 16,
-  },
-  form: {
-    width: '100%',
-    marginBottom: 24,
-  },
-  inputGroup: {
-    marginBottom: 20,
-  },
-  label: {
-    fontSize: 16,
-    fontWeight: '600',
-    color: '#000',
-    marginBottom: 8,
-  },
+  editButtonText: { color: "#fff", fontWeight: "700", fontSize: 16 },
+  form: { width: "100%", marginBottom: 24 },
+  inputGroup: { marginBottom: 20 },
+  label: { fontSize: 16, fontWeight: "600", color: "#000", marginBottom: 8 },
   input: {
-    backgroundColor: '#f8f8f8',
+    backgroundColor: "#f8f8f8",
     padding: 16,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: "#e0e0e0",
     fontSize: 16,
-    color: '#000',
+    color: "#000",
   },
-  textArea: {
-    minHeight: 100,
-    textAlignVertical: 'top',
-  },
-  infoCardsContainer: {
-    width: '100%',
-    gap: 16,
-  },
+  textArea: { minHeight: 100, textAlignVertical: "top" },
+  infoCardsContainer: { width: "100%", gap: 16, marginBottom: 30 },
   infoCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#f8f8f8',
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#f8f8f8",
     padding: 20,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#e0e0e0',
+    borderColor: "#e0e0e0",
   },
-  infoCardContent: {
-    marginLeft: 16,
-    flex: 1,
+  infoCardContent: { marginLeft: 16, flex: 1 },
+  infoCardTitle: { fontSize: 14, color: "#666", fontWeight: "500", marginBottom: 4 },
+  infoCardValue: { fontSize: 18, color: "#000", fontWeight: "600" },
+  logoutButton: {
+    backgroundColor: "#FF3B30",
+    paddingVertical: 14,
+    borderRadius: 25,
+    marginTop: 30,
+    width: "100%",
+    alignItems: "center",
   },
-  infoCardTitle: {
-    fontSize: 14,
-    color: '#666',
-    fontWeight: '500',
-    marginBottom: 4,
-  },
-  infoCardValue: {
-    fontSize: 18,
-    color: '#000',
-    fontWeight: '600',
-  },
+  logoutButtonText: { color: "#fff", fontSize: 16, fontWeight: "700" },
 });
+
 export default Account;

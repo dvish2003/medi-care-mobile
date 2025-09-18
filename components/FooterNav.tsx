@@ -3,7 +3,6 @@ import React from "react";
 import { useRouter, useSegments } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 
-// Define the Tab type
 type Tab = {
   label: string;
   path: string;
@@ -13,6 +12,7 @@ type Tab = {
 const tabs: Tab[] = [
   { label: "Home", path: "/home", icon: "home" },
   { label: "Medicines", path: "/medicines", icon: "medical" },
+  { label: "Reminders", path: "/reminders", icon: "notifications" },
   { label: "Packages", path: "/packages", icon: "bag" },
   { label: "Wellness", path: "/wellness", icon: "heart" },
   { label: "Account", path: "/account", icon: "person" }

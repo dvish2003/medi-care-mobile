@@ -11,6 +11,7 @@ type TabConfig = {
 const tabs: TabConfig[] = [
   { label: "Home", name: "home", icon: "home" },
   { label: "Medicines", name: "medicines", icon: "medical-services" },
+  { label: "Reminders", name: "reminders", icon: "notifications" },
   { label: "Packages", name: "packages", icon: "inventory" },
   { label: "Wellness", name: "wellness", icon: "favorite" },
   { label: "Account", name: "account", icon: "person-outline" },
@@ -28,7 +29,7 @@ const DashboardLayout = () => {
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
-          backgroundColor: '#000', // Black background
+          backgroundColor: '#000', 
         },
         tabBarLabelStyle: {
           fontSize: 12,

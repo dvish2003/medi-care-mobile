@@ -76,12 +76,12 @@ const handleRegister = async () => {
 
     if (response) {
       setTimeout(() => {
-        //clear form
         setEmail("");
         setPassword("");
         setConfirmPassword("");
         console.log("✅ Registration simulated successfully!");
         alert("Registration Successful")
+        router.push("/login");
         setIsLoading(false);
       }, 1500);
     } else {
