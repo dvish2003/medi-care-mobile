@@ -17,6 +17,7 @@ const tabs: TabConfig[] = [
   { label: "Account", name: "account", icon: "person-outline" },
 ];
 
+
 const DashboardLayout = () => {
   return (
     <Tabs
