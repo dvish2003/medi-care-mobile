@@ -16,6 +16,7 @@ import React, { useState } from "react";
 import { useRouter } from "expo-router";
 import { login } from "@/services/authService";
 import { Ionicons } from "@expo/vector-icons";
+import { useAuth } from "@/context/AuthContext";
 
 const { width, height } = Dimensions.get("window");
 
@@ -40,6 +41,7 @@ const MedicalCrossIcon = ({ size = 60, color = "#000" }) => {
 };
 
 const Login = () => {
+  const { user } = useAuth();
   const router = useRouter();
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -47,7 +49,8 @@ const Login = () => {
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
 
   const handleLogin = async () => {
-    if (!email || !password) {
+   try{
+     if (!email || !password) {
       Alert.alert("Error", "Please enter both email and password");
       return;
     }
@@ -55,18 +58,23 @@ const Login = () => {
     if (isLoading) return;
     
     setIsLoading(true);
-    await login(email, password)
-      .then((res) => {
-        console.log(res);
-        router.push("/home");
-      })
-      .catch((err) => {
-        console.error(err);
-        Alert.alert("Login failed", "Invalid email or password");
-      })
-      .finally(() => {
-        setIsLoading(false);
-      });
+    const response = await login(email, password)
+     if(response){
+      setIsLoading(false);
+      router.replace("/(dashboard)/home");
+      Alert.alert("Success", "Login successful");
+      setEmail("");
+      setPassword("");
+      
+     }
+      else{
+       Alert.alert("Error", "Login failed");
+       setIsLoading(false);
+      }
+   }catch{
+      Alert.alert("Error", "Login failed. Please check your credentials and try again.");
+      setIsLoading(false);
+   }
   };
 
   return (

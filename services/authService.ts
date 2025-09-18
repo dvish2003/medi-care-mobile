@@ -15,10 +15,13 @@ export async function registerUser(user: User) {
 
 }
 
-// export const login = (email: string, password: string) => {
-//   return signInWithEmailAndPassword(auth, email, password)
-// }
+export const login = async (email: string, password: string) => {
+  console.log("Logging in with......................:", email)
+  const response = await signInWithEmailAndPassword(auth, email, password)
+  console.log("Login Success full :", response.user)
+  return response
+}
 
-// export const logout = () => {
-//   return signOut(auth)
-// }
+export const logout = () => {
+  return signOut(auth)
+}
