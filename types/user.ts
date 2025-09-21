@@ -7,3 +7,12 @@ export type User = {
   age?: number;
   address?: string;
 };
+
+export interface UserData {
+  id?:string
+  name: string;
+  email: string;
+  phone: string;
+  age: string;
+  address: string;
+}
