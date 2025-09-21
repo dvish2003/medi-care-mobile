@@ -1,11 +1,11 @@
 {
   "expo": {
-    "name": "Medi-connect",
-    "slug": "Medi-connect",
+    "name": "Medi-Care",
+    "slug": "Medi-Care",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "MediConnect",
+    "scheme": "MediCare",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {

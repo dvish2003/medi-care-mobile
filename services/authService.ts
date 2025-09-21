@@ -25,3 +25,10 @@ export const login = async (email: string, password: string) => {
 export const logout = () => {
   return signOut(auth)
 }
+
+
+export const getCurrentUser = () => {
+  const email = auth.currentUser?.email;
+  console.log("Current user email:", email);
+  return email ? email : null;
+}

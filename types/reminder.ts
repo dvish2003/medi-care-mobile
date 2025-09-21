@@ -4,5 +4,6 @@ export type  Reminder = {
       note: string,
       date: string,
       time: string,
+      email?: string
 };  
     

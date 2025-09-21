@@ -17,6 +17,7 @@ import { useRouter } from "expo-router";
 import { login } from "@/services/authService";
 import { Ionicons } from "@expo/vector-icons";
 import { useAuth } from "@/context/AuthContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const { width, height } = Dimensions.get("window");
 
@@ -47,6 +48,7 @@ const Login = () => {
   const [password, setPassword] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [secureTextEntry, setSecureTextEntry] = useState<boolean>(true);
+  
 
   const handleLogin = async () => {
    try{
@@ -61,6 +63,8 @@ const Login = () => {
     const response = await login(email, password)
      if(response){
       setIsLoading(false);
+      //set email AsyncStorage
+      await AsyncStorage.setItem("userEmail", email);
       router.replace("/(dashboard)/home");
       Alert.alert("Success", "Login successful");
       setEmail("");

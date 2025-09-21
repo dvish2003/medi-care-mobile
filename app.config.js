@@ -1,6 +1,6 @@
 export default {
-  name: "Medi-connect",
-  slug: "Medi-connect",
+  name: "Medi-Care",
+  slug: "Medi-Care",
   extra: {
     mockApi: process.env.EXPO_BASE_API_URL
   }

@@ -23,7 +23,7 @@ const DashboardLayout = () => {
         tabBarInactiveTintColor: "#888", 
         headerShown: false,
         tabBarStyle: {
-          height: 60,
+          height: 90,
           borderTopWidth: 0,
           elevation: 0,
           shadowOpacity: 0,
