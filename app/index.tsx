@@ -16,10 +16,10 @@ const Index = () => {
       }
     }
   }, [user, loading, router])
-
+  
   if (loading) {
     return (
-      <View className="flex-1 justify-center items-center bg-white">
+      <View className="items-center justify-center flex-1 bg-white">
         <ActivityIndicator size="large" color="#0033FF" />
       </View>
     )
