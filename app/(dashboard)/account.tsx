@@ -1,4 +1,4 @@
-import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Alert, StyleSheet } from "react-native";
+import { View, Text, ScrollView, TouchableOpacity, Image, TextInput, Alert, StyleSheet, Animated } from "react-native";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
@@ -23,7 +23,11 @@ const Account = () => {
     age: "",
     address: "",
   });
-  const [saved, setSaved] = useState(false); // Track if profile is saved
+  const [saved, setSaved] = useState(false);
+  
+  // Animation values
+  const fadeAnim = useState(new Animated.Value(0))[0];
+  const slideUpAnim = useState(new Animated.Value(30))[0];
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -42,8 +46,36 @@ const Account = () => {
         console.error("Error fetching user data:", error);
       }
     };
+    
     fetchUserData();
+    
+    // Start animations
+    Animated.parallel([
+      Animated.timing(fadeAnim, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+      }),
+      Animated.timing(slideUpAnim, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+      })
+    ]).start();
   }, []);
+
+  // Gradient color scheme
+  const gradientColors = ['#BDCDCF', '#034c36', '#003333'];
+  const colors = {
+    primary: '#003333',
+    secondary: '#034c36',
+    accent: '#BDCDCF',
+    background: '#f8f9fa',
+    surface: '#ffffff',
+    text: '#003333',
+    textLight: '#034c36',
+    border: '#BDCDCF',
+  };
 
   const pickImage = async () => {
     const result = await ImagePicker.launchImageLibraryAsync({
@@ -80,7 +112,7 @@ const Account = () => {
 
       await AsyncStorage.setItem("userId", response);
       setEditing(false);
-      setSaved(true); // Mark as saved to hide the button
+      setSaved(true);
       Alert.alert("Success", "Profile updated successfully!");
       console.log("User Data Saved:", response);
     } catch (error) {
@@ -88,10 +120,6 @@ const Account = () => {
       Alert.alert("Error", "Something went wrong while saving profile");
     }
   };
-
-
-
-  
 
   const handleLogout = async () => {
     console.log("🔒 User logged out");
@@ -106,139 +134,176 @@ const Account = () => {
 
   return (
     <View style={styles.container}>
-      {/* Header */}
-      <View style={styles.header}>
+      {/* Gradient Background */}
+      <View style={[styles.gradientBackground, { backgroundColor: gradientColors[0] }]} />
+      
+      <Animated.View 
+        style={[
+          styles.header,
+          { 
+            opacity: fadeAnim,
+            transform: [{ translateY: slideUpAnim }]
+          }
+        ]}
+      >
         <TouchableOpacity onPress={() => router.back()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#000" />
+          <Ionicons name="arrow-back" size={24} color={colors.text} />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>My Profile</Text>
-        <View style={{ width: 24 }} />
-      </View>
+        <Text style={[styles.headerTitle, { color: colors.text }]}>My Profile</Text>
+        <TouchableOpacity 
+          style={[styles.logoutButton, { backgroundColor: colors.primary }]} 
+          onPress={handleLogout}
+        >
+          <Ionicons name="log-out-outline" size={20} color="#fff" />
+        </TouchableOpacity>
+      </Animated.View>
 
-      {/* Main Content */}
       <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.profileSection}>
-          {/* Profile Image */}
-          <View style={styles.profileImageContainer}>
+          <Animated.View 
+            style={[
+              styles.profileImageContainer,
+              { 
+                opacity: fadeAnim,
+                transform: [{ translateY: slideUpAnim }]
+              }
+            ]}
+          >
             <Image source={{ uri: profileImage }} style={styles.profileImage} />
-            <TouchableOpacity style={styles.editImageButton} onPress={pickImage}>
+            <TouchableOpacity style={[styles.editImageButton, { backgroundColor: colors.primary }]} onPress={pickImage}>
               <Ionicons name="camera" size={20} color="#fff" />
             </TouchableOpacity>
-          </View>
+          </Animated.View>
 
-          {/* Edit Button (hide if saved) */}
           {!saved && (
-            <TouchableOpacity
-              style={styles.editButton}
-              onPress={async () => {
-                if (editing) {
-                  await saveUserData();
-                } else {
-                  setEditing(true);
-                }
+            <Animated.View
+              style={{
+                opacity: fadeAnim,
+                transform: [{ translateY: slideUpAnim }]
               }}
             >
-              <Text style={styles.editButtonText}>{editing ? "Save Changes" : "Edit Profile"}</Text>
-            </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.editButton, { backgroundColor: colors.primary }]}
+                onPress={async () => {
+                  if (editing) {
+                    await saveUserData();
+                  } else {
+                    setEditing(true);
+                  }
+                }}
+              >
+                <Text style={styles.editButtonText}>
+                  {editing ? "Save Changes" : "Edit Profile"}
+                </Text>
+              </TouchableOpacity>
+            </Animated.View>
           )}
 
           {/* Profile Form */}
-          <View style={styles.form}>
+          <Animated.View 
+            style={[
+              styles.form,
+              { 
+                opacity: fadeAnim,
+                transform: [{ translateY: slideUpAnim }]
+              }
+            ]}
+          >
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Full Name *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Full Name *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { 
+                  backgroundColor: colors.surface, 
+                  color: colors.text, 
+                  borderColor: colors.border 
+                }]}
                 value={userData.name}
                 onChangeText={(text) => handleInputChange("name", text)}
                 editable={editing}
                 placeholder="Enter your full name"
-                placeholderTextColor="#888"
+                placeholderTextColor={colors.textLight}
               />
             </View>
+            
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Email *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Email *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { 
+                  backgroundColor: colors.surface, 
+                  color: colors.text, 
+                  borderColor: colors.border 
+                }]}
                 value={userData.email}
                 editable={editing}
                 onChangeText={(text) => handleInputChange("email", text)}
                 keyboardType="email-address"
                 placeholder="Enter your email"
-                placeholderTextColor="#888"
+                placeholderTextColor={colors.textLight}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Phone Number *</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Phone Number *</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { 
+                  backgroundColor: colors.surface, 
+                  color: colors.text, 
+                  borderColor: colors.border 
+                }]}
                 value={userData.phone}
                 onChangeText={(text) => handleInputChange("phone", text)}
                 editable={editing}
                 keyboardType="phone-pad"
                 placeholder="Enter your phone number"
-                placeholderTextColor="#888"
+                placeholderTextColor={colors.textLight}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Age</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Age</Text>
               <TextInput
-                style={styles.input}
+                style={[styles.input, { 
+                  backgroundColor: colors.surface, 
+                  color: colors.text, 
+                  borderColor: colors.border 
+                }]}
                 value={userData.age}
                 onChangeText={(text) => handleInputChange("age", text)}
                 editable={editing}
                 keyboardType="numeric"
                 placeholder="Enter your age"
-                placeholderTextColor="#888"
+                placeholderTextColor={colors.textLight}
               />
             </View>
 
             <View style={styles.inputGroup}>
-              <Text style={styles.label}>Address</Text>
+              <Text style={[styles.label, { color: colors.text }]}>Address</Text>
               <TextInput
-                style={[styles.input, styles.textArea]}
+                style={[styles.input, styles.textArea, { 
+                  backgroundColor: colors.surface, 
+                  color: colors.text, 
+                  borderColor: colors.border 
+                }]}
                 value={userData.address}
                 onChangeText={(text) => handleInputChange("address", text)}
                 editable={editing}
                 multiline
                 placeholder="Enter your address"
-                placeholderTextColor="#888"
+                placeholderTextColor={colors.textLight}
               />
             </View>
-          </View>
+          </Animated.View>
 
-          {/* Additional Info Cards */}
-          <View style={styles.infoCardsContainer}>
-            <View style={styles.infoCard}>
-              <Ionicons name="calendar" size={24} color="#007AFF" />
-              <View style={styles.infoCardContent}>
-                <Text style={styles.infoCardTitle}>Member Since</Text>
-                <Text style={styles.infoCardValue}>January 2024</Text>
-              </View>
-            </View>
-
-            <View style={styles.infoCard}>
-              <Ionicons name="document" size={24} color="#34C759" />
-              <View style={styles.infoCardContent}>
-                <Text style={styles.infoCardTitle}>Prescriptions</Text>
-                <Text style={styles.infoCardValue}>3 Active</Text>
-              </View>
-            </View>
-
-            <View style={styles.infoCard}>
-              <Ionicons name="people" size={24} color="#FF9500" />
-              <View style={styles.infoCardContent}>
-                <Text style={styles.infoCardTitle}>Family Members</Text>
-                <Text style={styles.infoCardValue}>2 Registered</Text>
-              </View>
-            </View>
-          </View>
-
-          {/* Logout Button */}
-          <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-            <Text style={styles.logoutButtonText}>Logout</Text>
-          </TouchableOpacity>
+          <Animated.View 
+            style={[
+              styles.emptyState,
+              { 
+                opacity: fadeAnim,
+                transform: [{ translateY: slideUpAnim }]
+              }
+            ]}
+          >
+          </Animated.View>
         </View>
       </ScrollView>
     </View>
@@ -246,7 +311,18 @@ const Account = () => {
 };
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { 
+    flex: 1, 
+    backgroundColor: "#f8f9fa" 
+  },
+  gradientBackground: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    height: 300,
+    opacity: 0.1,
+  },
   header: {
     flexDirection: "row",
     alignItems: "center",
@@ -254,44 +330,139 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 20,
     paddingHorizontal: 20,
-    backgroundColor: "#fff",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
+    backgroundColor: "transparent",
   },
-  backButton: { padding: 8, borderRadius: 20, backgroundColor: "#f8f8f8" },
-  headerTitle: { fontSize: 24, fontWeight: "800", color: "#000", letterSpacing: -0.5 },
-  scrollView: { flex: 1 },
-  scrollContent: { padding: 20, paddingBottom: 40 },
-  profileSection: { alignItems: "center" },
-  profileImageContainer: { position: "relative", marginBottom: 24 },
-  profileImage: { width: 120, height: 120, borderRadius: 60, borderWidth: 3, borderColor: "#f8f8f8" },
-  editImageButton: {
-    position: "absolute",
-    bottom: 0,
-    right: 0,
-    backgroundColor: "#000",
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  backButton: { 
+    padding: 12, 
+    borderRadius: 30, 
+    backgroundColor: "rgba(255, 255, 255, 0.9)",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  headerTitle: { 
+    fontSize: 28, 
+    fontWeight: "800", 
+    letterSpacing: -0.5,
+  },
+  logoutButton: {
+    padding: 12,
+    borderRadius: 30,
+    width: 44,
+    height: 44,
     justifyContent: "center",
     alignItems: "center",
-    borderWidth: 2,
-    borderColor: "#fff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  editButton: { backgroundColor: "#000", paddingHorizontal: 24, paddingVertical: 12, borderRadius: 25, marginBottom: 24 },
-  editButtonText: { color: "#fff", fontWeight: "700", fontSize: 16 },
-  form: { width: "100%", marginBottom: 24 },
-  inputGroup: { marginBottom: 20 },
-  label: { fontSize: 16, fontWeight: "600", color: "#000", marginBottom: 8 },
-  input: { backgroundColor: "#f8f8f8", padding: 16, borderRadius: 12, borderWidth: 1, borderColor: "#e0e0e0", fontSize: 16, color: "#000" },
-  textArea: { minHeight: 100, textAlignVertical: "top" },
-  infoCardsContainer: { width: "100%", gap: 16, marginBottom: 30 },
-  infoCard: { flexDirection: "row", alignItems: "center", backgroundColor: "#f8f8f8", padding: 20, borderRadius: 16, borderWidth: 1, borderColor: "#e0e0e0" },
-  infoCardContent: { marginLeft: 16, flex: 1 },
-  infoCardTitle: { fontSize: 14, color: "#666", fontWeight: "500", marginBottom: 4 },
-  infoCardValue: { fontSize: 18, color: "#000", fontWeight: "600" },
-  logoutButton: { backgroundColor: "#FF3B30", paddingVertical: 16, borderRadius: 12, marginTop: 20, width: "100%", alignItems: "center", marginBottom: 30 },
-  logoutButtonText: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  scrollView: { 
+    flex: 1,
+  },
+  scrollContent: { 
+    padding: 20, 
+    paddingBottom: 40 
+  },
+  profileSection: { 
+    alignItems: "center" 
+  },
+  profileImageContainer: { 
+    position: "relative", 
+    marginBottom: 24 
+  },
+  profileImage: { 
+    width: 140, 
+    height: 140, 
+    borderRadius: 70, 
+    borderWidth: 4, 
+    borderColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  editImageButton: {
+    position: "absolute",
+    bottom: 5,
+    right: 5,
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    justifyContent: "center",
+    alignItems: "center",
+    borderWidth: 3,
+    borderColor: "#ffffff",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 4,
+  },
+  editButton: { 
+    paddingHorizontal: 32, 
+    paddingVertical: 16, 
+    borderRadius: 30, 
+    marginBottom: 24,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 6,
+  },
+  editButtonText: { 
+    color: "#fff", 
+    fontWeight: "700", 
+    fontSize: 16,
+    letterSpacing: 0.5,
+  },
+  form: { 
+    width: "100%", 
+    marginBottom: 24 
+  },
+  inputGroup: { 
+    marginBottom: 20 
+  },
+  label: { 
+    fontSize: 16, 
+    fontWeight: "600", 
+    marginBottom: 8,
+    letterSpacing: 0.5,
+  },
+  input: { 
+    padding: 18, 
+    borderRadius: 16, 
+    borderWidth: 2,
+    fontSize: 16,
+    fontWeight: "500",
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
+  },
+  textArea: { 
+    minHeight: 100, 
+    textAlignVertical: "top" 
+  },
+  emptyState: {
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 40,
+    marginTop: 20,
+  },
+  emptyStateText: {
+    fontSize: 16,
+    textAlign: "center",
+    fontWeight: "500",
+    marginTop: 12,
+    lineHeight: 22,
+    letterSpacing: 0.3,
+  },
 });
 
 export default Account;

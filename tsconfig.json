@@ -11,6 +11,10 @@
   "include": [
     "**/*.ts",
     "**/*.tsx",
-    "nativewind-env.d.ts"
-, "firebase.ts", "firebaseConfig.js"  ]
+    "nativewind-env.d.ts",
+    "firebase.ts",
+    "firebaseConfig.js",
+    ".expo/types/**/*.ts",
+    "expo-env.d.ts"
+  ]
 }
