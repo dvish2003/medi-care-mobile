@@ -13,7 +13,6 @@ interface saveUser {
 }
 
 export const saveUser = async (userData: UserData) => {
-    console.log("Saving user..........:", userData);
     const { id,name,email,phone,age,address } = userData
 
     const userData_1: saveUser = {name,email,phone,age,address };
