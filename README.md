@@ -23,6 +23,6 @@ Watch the app in action on YouTube:
 
 ## Download APK
 You can download the latest APK to install on your Android device:  
-[Download Medi-Care APK](./assets/application/medi-care.apk)
+[Download Medi-Care APK](https://expo.dev/accounts/dvish2003/projects/medicare/builds/5baf1c28-2605-4b77-a300-667c0a6e5566)
 
 ---
